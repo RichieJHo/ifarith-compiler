@@ -122,11 +122,11 @@
   (match e
     ;; literals
     [(? integer? i) i]
-    ['true 'todo]
-    ['false 'todo]
-    [(? symbol? x) 'todo]
-    [`(,(? bop? bop) ,e0 ,e1) 'todo]
-    [`(,(? uop? uop) ,e) 'todo]
+    ['true e]
+    ['false e]
+    [(? symbol? x) x]
+    [`(,(? bop? bop) ,e0 ,e1) `(,bop ,(ifarith->ifarith-tiny e0) ,(ifarith->ifarith-tiny e1))]
+    [`(,(? uop? uop) ,e) `(,uop ,(ifarith->ifarith-tiny e))]
     ;; 0-binding case
     [`(let* () ,e) 'todo]
     ;; 1+-binding case
@@ -135,20 +135,21 @@
     [`(let* ([,(? symbol? x0) ,e0] ,rest-binding-pairs ...) ,e-body)
      'todo]
     ;; print an arbitrary expression (must be a number at runtime)
-    [`(print ,_)
-     'todo]
+    [`(print ,_) e]
     ;; and/or, with short-circuiting semantics
-    [`(and ,e0) 'todo]
-    [`(and ,e0 ,es ...) 'todo]
-    [`(or ,e0) 'todo]
-    [`(or ,e0 ,es ...) 'todo]
+    [`(and ,e0) (ifarith->ifarith-tiny e0)]
+    [`(and ,e0 ,es ...) (ifarith->ifarith-tiny `(if ,e0 (and ,@es) 0))]
+    [`(or ,e0) (ifarith->ifarith-tiny e0)]
+    [`(or ,e0 ,es ...) (ifarith->ifarith-tiny `(if ,e0 true (or ,es)))]
     ;; if argument is 0, false, otherwise true
-    [`(if ,e0 ,e1 ,e2) 'todo]
+    [`(if ,e0 ,e1 ,e2) `(if ,(ifarith->ifarith-tiny e0)
+                            ,(ifarith->ifarith-tiny e1)
+                            ,(ifarith->ifarith-tiny e2))]
     ;; cond where the last case is else
     [`(cond [else ,(? ifarith? else-body)])
-     'todo]
+     (ifarith->ifarith-tiny else-body)]
     [`(cond [,c0 ,e0] ,rest ...)
-     'todo]))
+     (ifarith->ifarith-tiny `(if ,c0 ,e0 (cond ,@rest)))]
 
 ;; Stage 3: Administrative Normal Form (ANF)
 ;; 
