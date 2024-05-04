@@ -1,0 +1,6 @@
+((mov-lit r0 8)
+ (mov-lit r1 4)
+ (mov-lit r2 3)
+ (mul r2 r0)
+ (sub r2 r1)
+ (print r2))
