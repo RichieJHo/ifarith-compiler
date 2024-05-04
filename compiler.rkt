@@ -149,7 +149,7 @@
     [`(cond [else ,(? ifarith? else-body)])
      (ifarith->ifarith-tiny else-body)]
     [`(cond [,c0 ,e0] ,rest ...)
-     (ifarith->ifarith-tiny `(if ,c0 ,e0 (cond ,@rest)))]
+     (ifarith->ifarith-tiny `(if ,c0 ,e0 (cond ,@rest)))]))
 
 ;; Stage 3: Administrative Normal Form (ANF)
 ;; 
