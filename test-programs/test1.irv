@@ -1,0 +1,4 @@
+((mov-lit r0 9)
+ (mov-lit r1 3)
+ (idiv r0 r1)
+ (print r0))
