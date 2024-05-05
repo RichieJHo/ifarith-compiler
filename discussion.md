@@ -31,6 +31,10 @@ racket compiler.rkt -v test-programs/sum1.irv
 
 (Also pass in -m for Mac)
 
+Answer: 
+The purpose of ir-virtual is to make unique machine-independent assembly representation of racket code which can make development and optimization easier. What makes x86 and ir-virtual different is that ir-virtual is not tied to any particular hardware platform and allows for higher level of abstraction, focusing on program structure and semantics rather than low-level details like specific CPU instructions. One advantage of ir-virtual is the hardware independence, making it a more available and accessible option. One con of ir-virtual is the learning curve, since ir-virtual introduces new layers of abstraction it could be harder for one to perform optimizations. 
+
+
 [ Question 2 ] 
 
 For this task, you will write three new .ifa programs. Your programs
@@ -189,4 +193,6 @@ be increasingly important to have technical conversations about the
 nuts and bolts of code, try to use this experience as a way to think
 about how you would approach doing group code critique. What would you
 do differently next time, what did you learn?
+
+When we were compiling and testing the compiler.rkt we encountered a very strange error. It was that apparently on the Mac that we were running on, Racket was not on the path. It was a strange issue due to the fact that all the other previous projects were in the same location and ran just fine. We were able to figure it out by re-downloading Racket and adjusting the Racket path after some help from the professor. We found it quite interesting how the ifarith-tiny can cut down an expression to just the numbers. We had issues figuring out what the code did but after some research, we found that it is quite clever how they used “uop” and “bop” operations to check if they were valid ifarith expressions. As a group, we found it hard to schedule times where we could work together so we split up the project and attempted it individually. Ultimately, we found a time to work together and found that working together and throwing ideas at each other was the best way to work on this project. We immediately called out every error that we made as soon as we saw it and it was very helpful because we did not have to find the issue later on when we had more problems that stemmed from that same issue. Also, when writing up the discussion it was way better to have each other discuss the questions as we did not solve the issues individually but rather together with the help of discussion and some argumentation. 
 
