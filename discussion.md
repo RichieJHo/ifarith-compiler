@@ -49,6 +49,13 @@ carefully the relevance of each of the intermediate representations.
 For this question, please add your `.ifa` programs either (a) here or
 (b) to the repo and write where they are in this file.
 
+ I added all 3 of our ifa to the test-programs directory, they are labeled test0.ifa, test1.ifa, test2.ifa respectively. For test0, the input was (* (+ 2 3) 5), and the output was 25. For test1, the input was (if (equal? (+ 2 2) 4) #t #f) and the output was
+ an error. Finally for test2 the input was 289765, and the output was 289765.  If we examine test2 thoroughly we can see that when running the input starts at stage 1 and gets desugared to stage 2, ifarith-tiny. After going through irarith-tiny it gets sent
+ to stage 3 which is ANF and it turns into a simple argument. It then gets sent to IR-Virtual which turns it into assembly using virtual registers. After becoming assembly it goes to x86 which is the stack allocation. Finally it goes down one more last layer
+ and creates a nasm file which is the assembled file.  
+
+
+
 [ Question 3 ] 
 
 Describe each of the passes of the compiler in a slight degree of
@@ -60,6 +67,90 @@ there could be more?
 
 In answering this question, you must use specific examples that you
 got from running the compiler and generating an output.
+
+ In stage 1, IfArith this stage deals with the surface level syntax of if statements and arithmetic operations. It parses if statements and basic arithmetic expressions. For example when we ran test0: (* (+ 2 3) 5), this stage handled the arithmetic. Then stage
+ 2, IfArithTiny desugars high-level if statements and arithmetic expressions into a simpler form, preparing them for further transformations. Turning our test case into simpler conditional and arithmetic operations. Next is stage 3, ANF which is a transformational
+ stage that converts complex expressions into a form where every function call is passed simple arguments. Stage 4, IR-Virtual Purpose happens next. IR-Virtual is an intermediate representation that abstracts away platform-specific details, focusing on virtual
+ registers and simple assembly-like instructions. When running test0 this turned our expression into assembly-like code that looked like: ((mov-lit r0 8) (mov-lit r1 4) (mov-lit r2 3) (mul r2 r0) (sub r2 r1) (print r2)). Next stage 5  x86 occurs. This stage
+ translates the IR-Virtual representation into x86 assembly language, which is specific to the x86 architecture. Our test case after reaching this part looked like: 
+
+section
+ .data 
+
+int_format db "%ld", 10,0 
+
+global _main 
+
+extern printf 
+
+section
+ text 
+
+_start:
+ call main 
+
+mov
+ rax, 60 
+
+xor rdi, rdi 
+
+syscall 
+
+main:
+ push rbp 
+
+mov rbp, rsp 
+
+sub rsp, 48 
+
+mov esi, 8
+
+mov [rbp-16], esi
+
+mov esi, 4
+
+mov [rbp-8], esi
+
+mov esi, 3
+
+mov [rbp-24], esi
+
+mov edi, [rbp-16]
+
+mov eax, [rbp-24]
+
+mul eax, edi
+
+mov [rbp-24], eax
+
+mov edi, [rbp-8]
+
+mov eax, [rbp-24]
+
+sub eax, edi
+
+mov [rbp-24], eax
+
+mov esi, [rbp-24]
+
+lea rdi, [rel int_format]
+
+mov eax, 0
+
+call printf
+
+finish_up:
+ add rsp, 48
+
+leave
+
+ret
+
+Finally
+ stage 6, NASM generates NASM assembly code files from the x86 representation, preparing the code for assembly and linking. Overall, each pass of the compiler serves a specific purpose in transforming the code from a high-level representation to platform-specific
+ machine code. While some stages might seem conceptually similar, they often perform distinct transformations or optimizations. It's possible that certain optimizations or transformations could be combined or reorganized to improve the efficiency or clarity
+ of the compiler. However, introducing additional passes should be carefully considered to avoid unnecessary complexity or performance overhead.
+
 
 [ Question 4 ] 
 
