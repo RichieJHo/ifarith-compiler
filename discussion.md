@@ -166,6 +166,9 @@ definition of what an idiom is: think carefully about whether you see
 any pattern in this code that resonates with you from earlier in the
 semester.
 
+Answer:
+In our compiler some of the most recognizable idioms are match, cond, and let. These three have been very prominent throughout the entire semester. In our compiler match is used frequently such as in the function (virtual-instr? instr) where it is used to recognize different types of virtual machine instructions. Cond is also utilized in our compiler numerous times to check for specific conditions before executing the appropriate operations, we can see this in the function (print-x86 x86) where it checks whether op is a string or symbol and handles the case where it's neither. Lastly, the idiom let, is an important one as it allows for creating local bindings without explicitly defining them. This is useful in various scenarios such as in (value? v) where let is used to create a local binding for the result of applying a function f to two normalized terms t0 and t1. I believe these idioms are among the most important when it comes to efficient coding.
+
 [ Question 5 ] 
 
 In this question, you will play the role of bug finder. I would like
@@ -183,6 +186,9 @@ ask me.
 
 Your team will receive a small bonus for being the first team to
 report a unique bug (unique determined by me).
+
+Answer: 
+After running different test cases we found that the compiler can not support the equal? function. When running test case test1.ifa we got the error: match: no matching clause for ‘(equal? (+ 2 2) 4)
 
 [ High Level Reflection ] 
 
